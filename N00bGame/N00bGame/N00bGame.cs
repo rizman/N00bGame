@@ -20,7 +20,8 @@ namespace N00bGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Components.GridComponent grid;
-        Components.CameraComponent camera;
+        //Components.CameraComponent camera;
+        Dhpoware.CameraComponent camera;
 
         public N00bGame()
         {
@@ -40,13 +41,18 @@ namespace N00bGame
             grid = new Components.GridComponent(this);
             grid.MajorColor = Color.Red;
 
-            camera = new Components.CameraComponent(this);
+            //camera = new Components.CameraComponent(this);
+            camera = new Dhpoware.CameraComponent(this);
 
             this.Components.Add(grid);
             this.Components.Add(camera);
             Mouse.SetPosition(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
             oldMouseState = Mouse.GetState();
             currentMouseState = Mouse.GetState();
+
+            camera.CurrentBehavior = Dhpoware.Camera.Behavior.Spectator;
+            camera.Velocity = new Vector3(20f, 20f, 20f);
+
             base.Initialize();
         }
 
@@ -89,46 +95,48 @@ namespace N00bGame
             float amount = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.005f;
             currentMouseState = Mouse.GetState();
             
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                camera.Move(Actions.MoveForward);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                camera.Move(Actions.MoveBackward);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                camera.Rotate(0f, 0f, amount * 10);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                camera.Rotate(0f, 0f, -amount * 10);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                camera.Move(Actions.StrafeLeft);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                camera.Move(Actions.StrafeRight);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.R))
-            {
-                camera.Move(Actions.TurnLeft);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
-            {
-                camera.Move(Actions.TurnRight);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.T))
-            {
-                camera.Move(Actions.LookUp);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
-            {
-                camera.Move(Actions.LookDown);
-            }
+            //if (Keyboard.GetState().IsKeyDown(Keys.W))
+            //{
+            //    //camera.Move(Actions.MoveForward);
+            //    camera.Move(Vector3.Forward, new Vector3(amount, 0f, 0f));
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.S))
+            //{
+            //    //camera.Move(Actions.MoveBackward);
+            //    camera.Move(Vector3.Backward, new Vector3(-amount, 0f, 0f));
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            //{
+            //    camera.Rotate(0f, 0f, amount * 10);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.E))
+            //{
+            //    camera.Rotate(0f, 0f, -amount * 10);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.A))
+            //{
+            //    //camera.Move(Actions.StrafeLeft);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.D))
+            //{
+            //    //camera.Move(Actions.StrafeRight);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.R))
+            //{
+            //    //camera.Move(Actions.TurnLeft);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.F))
+            //{
+            //    //camera.Move(Actions.TurnRight);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.T))
+            //{
+            //    //camera.Move(Actions.LookUp);
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.G))
+            //{
+            //    //camera.Move(Actions.LookDown);
+            //}
 
             Vector2 mouseDelta = new Vector2(currentMouseState.X - oldMouseState.X, currentMouseState.Y - oldMouseState.Y);
             camera.Rotate(-mouseDelta.X * amount, -mouseDelta.Y * amount, 0.0f);
@@ -137,8 +145,10 @@ namespace N00bGame
             oldMouseState = Mouse.GetState();
 
             grid.World = Matrix.Identity;
-            grid.View = camera.View;
-            grid.Projection = camera.Projection;
+            //grid.View = camera.View;
+            //grid.Projection = camera.Projection;
+            grid.View = camera.ViewMatrix;
+            grid.Projection = camera.ProjectionMatrix;
             
             base.Update(gameTime);
         }
